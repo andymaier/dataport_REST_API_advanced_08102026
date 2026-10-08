@@ -1,0 +1,94 @@
+openapi: '3.0.3'
+info:
+  title: Catalogue Api
+  version: '1.0'
+servers:
+  - url: https://localhost:50001
+tags:
+  - name: Shop
+paths:
+  /articles:    
+    get:
+      tags:
+        - Shop
+      summary: Get all articles
+      description: Respond with all articles    
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseArticle'
+    post:
+      tags:
+        - Shop
+      summary: Created one Article
+      description: This will created an Article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestArticle'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseArticle'      
+  /articles/{aid}:
+    get:
+      tags:
+        - Shop
+      summary: Get specific article
+      description: Respond with all articles    
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseArticle'
+    put...-> ich überschreibe ein Objekt
+    patch... -> ich ändere nur den WErt eines Feldes
+    delete...
+
+components:
+  schemas:
+    ResponseArticle:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          maxLength: 36
+        name:
+          type: string
+          maxLength: 70
+          description: Name of the Article
+          example: Cherry
+        price:
+          type: number
+          minimum: 0
+          description: This is the price of the article.
+          example: 0.99
+      required:
+        - id
+        - name        
+    RequestArticle:
+      type: object
+      properties:        
+        name:
+          type: string
+          maxLength: 70
+          description: Name of the Article
+          example: Cherry
+      required:
+        - name        
+
+
