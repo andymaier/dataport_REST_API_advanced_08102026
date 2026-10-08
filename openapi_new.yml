@@ -1,4 +1,4 @@
-openapi: '3.0.3'
+openapi: '3.0.4'
 info:
   title: Catalog Api
   version: '1.0.0'
@@ -7,6 +7,8 @@ info:
     name: soeren.firlus
     email: soeren.firlus@dataport.de
     url: soeren-firlus.com
+  x-api-id: 58361643-abd2-47e5-bb58-e7891de6576e
+  x-audience: company-internal
 servers:
   - url: https://localhost:50001
 tags:
@@ -26,21 +28,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ResponseArticle'
-        '400':
+                $ref: '#/components/schemas/ResponseArticleList'
+        '4XX':
           description: Bad Request
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ErrorMsg'
-        'default':
-          description: DefaultResponse
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMsg'
+        default:
+          $ref: '#/components/responses/DefaultError'
     post:
       operationId: createArticle
       summary: Create an article
@@ -59,6 +55,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseArticle'
+        default:
+          $ref: '#/components/responses/DefaultError'
   /articles/{id}:
     parameters:
       - name: id
@@ -83,6 +81,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseArticle'
+        default:
+          $ref: '#/components/responses/DefaultError'
     put:
       operationId: replaceArticle
       summary: Replace an article
@@ -102,6 +102,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseArticle'
+        default:
+          $ref: '#/components/responses/DefaultError'
     patch:
       operationId: updateArticle
       summary: Update an article
@@ -121,6 +123,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseArticle'
+        default:
+          $ref: '#/components/responses/DefaultError'
     delete:
       operationId: deleteArticle
       summary: Delete an article
@@ -131,17 +135,35 @@ paths:
       responses:
         '200':
           description: Deleted
+        default:
+          $ref: '#/components/responses/DefaultError'
 components:
+  responses:
+    DefaultError:
+      description: Unexpected error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMsg'
   schemas:
+    ResponseArticleList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseArticle'
+      required:
+        - items
     ErrorMsg:
       type: object
       description: Problem Details for HTTP APIs (RFC 9457)
       properties:
         type:
           type: string
-          format: uri-reference
+          format: uri
           default: about:blank
-          description: URI reference identifying the problem type
+          description: URI identifying the problem type
           example: https://example.com/problems/article-not-found
         title:
           type: string
@@ -163,7 +185,6 @@ components:
           format: uri-reference
           description: URI reference identifying the specific occurrence
           example: /articles/3fa85f64-5717-4562-b3fc-2c963f66afa6
-      additionalProperties: true
     RequestArticle:
       type: object
       properties:

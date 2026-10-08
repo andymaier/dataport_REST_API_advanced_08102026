@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la; ls -a .. | head; which spectral npx; cat .spectral* 2>/dev/null | head -30)",
+      "Read(//home/andreas/development/**)",
+      "Bash(python3 -)",
+      "Bash(spectral lint *)"
+    ]
+  }
+}
